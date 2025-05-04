@@ -38,35 +38,6 @@ class RegularPostsPlugin(PluginBase):
             logger.error(f"テンプレート読み込みエラー: {e}")
             return {}
 
-    def _generate_daily_schedule(self):
-        """一日の投稿スケジュールを生成"""
-        schedule = []
-
-        # 活動時間帯
-        active_hours = self.config.get("active_hours", [7, 24])
-
-        # 投稿頻度（1日あたりの投稿数）
-        post_frequency = self.config.get("post_frequency", 5)
-
-        # 投稿スケジュールを生成（活動時間内でランダム）
-        for _ in range(post_frequency):
-            hour = random.randint(active_hours[0], active_hours[1])
-            minute = random.randint(0, 59)
-            schedule.append((hour, minute))
-
-        # 時間順にソート
-        return sorted(schedule)
-
-    def _refresh_schedule_if_needed(self, current_time):
-        """必要に応じてスケジュールを更新"""
-        current_date = current_time.date()
-
-        # 日付が変わった場合、スケジュールを再生成
-        if current_date != self.last_post_date:
-            self.post_schedules = self._generate_daily_schedule()
-            self.last_post_date = current_date
-            logger.info(f"新しい日のスケジュールを生成しました: {self.post_schedules}")
-
     def _format_post_text(self, template_key=None):
         """投稿内容をフォーマット"""
         # キーが指定されない場合はランダムに選択
@@ -130,7 +101,6 @@ class RegularPostsPlugin(PluginBase):
         """タイマー処理"""
         # 前回の投稿からの経過時間
         elapsed = (current_time - self.last_post_time).total_seconds()
-
         # 設定した間隔を超えたら投稿
         if elapsed >= self.next_post_interval:
             self._post_scheduled_content()
