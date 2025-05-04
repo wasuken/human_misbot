@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import time
-from techbot.bot import TechBot
+from core.bot import TechBot
 from plugins.loader import PluginLoader
 
 # ログ設定
