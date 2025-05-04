@@ -1,0 +1,28 @@
+{
+  "instance_url": "https://misskey.example.com",
+  "access_token": "YOUR_ACCESS_TOKEN_HERE",
+  "username": "techbot",
+  "enabled_plugins": [
+    "regular_posts",
+    "reactions",
+    "reply_mentions",
+    "trend_watcher"
+  ],
+  "plugins_config": {
+    "regular_posts": {
+      "active_hours": [7, 24],
+      "post_frequency": 5,
+      "topics_priority": ["tech_news", "programming", "gadgets", "work", "food", "random"]
+    },
+    "reactions": {
+      "reaction_probability": 0.4,
+      "tech_reaction_probability": 0.7
+    },
+    "reply_mentions": {
+      "reply_probability": 0.9
+    },
+    "trend_watcher": {
+      "trend_check_interval": 3600
+    }
+  }
+}
