@@ -60,11 +60,12 @@ class MisskeyAPI:
         
         # 新しい接続を作成
         ws_url = f"{self.instance_url.replace('http', 'ws')}/streaming"
+
+    def on_open(ws):
+        logger.info("WebSocket接続が確立されました")
+        self.ws_connected = True
         
-        def on_open(ws):
-            logger.info("WebSocket接続が確立されました")
-            self.ws_connected = True
-            
+        try:
             # ストリーミング接続開始
             connect_data = {
                 'type': 'connect',
@@ -74,59 +75,49 @@ class MisskeyAPI:
                     'params': {'i': self.access_token}
                 }
             }
+            logger.debug(f"送信データ: {json.dumps(connect_data)}")
             ws.send(json.dumps(connect_data))
+            logger.info("メインチャンネル接続リクエスト送信")
             
-            # ホームタイムライン購読
-            timeline_data = {
-                'type': 'connect',
-                'body': {
-                    'channel': 'homeTimeline',
-                    'id': 'homeTimeline',
-                    'params': {'i': self.access_token}
-                }
-            }
-            ws.send(json.dumps(timeline_data))
+            # その他の接続処理...
             
-            # メンション購読
-            mention_data = {
-                'type': 'connect',
-                'body': {
-                    'channel': 'mention',
-                    'id': 'mention',
-                    'params': {'i': self.access_token}
-                }
-            }
-            ws.send(json.dumps(mention_data))
-            
-        def on_message(ws, message):
-            try:
-                data = json.loads(message)
-                # メッセージデータの前処理
-                if data.get('type') == 'channel' and data.get('body'):
-                    body = data.get('body')
-                    channel = body.get('channel')
-                    
-                    if channel == 'homeTimeline':
-                        # ホームタイムラインのメッセージ
-                        on_message_callback({
-                            'type': 'note',
-                            'data': body.get('body')
-                        })
-                    elif channel == 'mention':
-                        # メンションのメッセージ
-                        on_message_callback({
-                            'type': 'mention',
-                            'data': body.get('body')
-                        })
-            except Exception as e:
-                logger.error(f"WebSocketメッセージ処理中に例外が発生しました: {e}")
+        except Exception as e:
+            logger.error(f"WebSocket送信中にエラーが発生: {e}")
+        
+    def on_close(ws, close_status_code, close_msg):
+        logger.info(f"WebSocket接続が閉じられました: {close_status_code}, {close_msg}")
+        self.ws_connected = False
+        # より詳細なエラー情報を記録
+        if close_status_code:
+            logger.error(f"WebSocket切断コード: {close_status_code}")
+        if close_msg:
+            logger.error(f"WebSocket切断メッセージ: {close_msg}")
+                
+            def on_message(ws, message):
+                try:
+                    data = json.loads(message)
+                    # メッセージデータの前処理
+                    if data.get('type') == 'channel' and data.get('body'):
+                        body = data.get('body')
+                        channel = body.get('channel')
+                        
+                        if channel == 'homeTimeline':
+                            # ホームタイムラインのメッセージ
+                            on_message_callback({
+                                'type': 'note',
+                                'data': body.get('body')
+                            })
+                        elif channel == 'mention':
+                            # メンションのメッセージ
+                            on_message_callback({
+                                'type': 'mention',
+                                'data': body.get('body')
+                            })
+                except Exception as e:
+                    logger.error(f"WebSocketメッセージ処理中に例外が発生しました: {e}")
                 
         def on_error(ws, error):
             logger.error(f"WebSocketエラー: {error}")
-            self.ws_connected = False
-            
-        def on_close(ws, close_status_code, close_msg):
-            logger.info(f"WebSocket接続が閉じられました: {close_status_code}, {close_msg}")
             self.ws_connected = False
             
         def run_websocket(*args):
