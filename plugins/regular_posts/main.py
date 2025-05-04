@@ -13,13 +13,19 @@ logger = logging.getLogger("TechBot.RegularPostsPlugin")
 
 class RegularPostsPlugin(PluginBase):
     """定期投稿を行うプラグイン"""
-    
     def __init__(self, bot, config=None):
         """初期化"""
         super().__init__(bot, config)
         self.templates = self._load_templates()
-        self.post_schedules = self._generate_daily_schedule()
-        self.last_post_date = datetime.date.today()
+        # 最終投稿時刻を記録
+        self.last_post_time = datetime.datetime.now()
+        # 次の投稿までの待機時間（秒）
+        self.next_post_interval = self._get_random_interval()
+
+   def _get_random_interval(self):
+       """次の投稿までのランダムな間隔を取得（1〜10分）"""
+       # 60秒（1分）〜600秒（10分）のランダムな秒数
+       return random.randint(60, 600)
         
     def _load_templates(self):
         """投稿テンプレートを読み込む"""
@@ -115,21 +121,19 @@ class RegularPostsPlugin(PluginBase):
             template = template + " " + random.choice(emojis)
         
         return template
-    
     def on_timer(self, current_time):
         """タイマー処理"""
-        # スケジュール更新確認
-        self._refresh_schedule_if_needed(current_time)
+        # 前回の投稿からの経過時間
+        elapsed = (current_time - self.last_post_time).total_seconds()
         
-        # 現在時刻がスケジュールと一致するか確認
-        current_hour = current_time.hour
-        current_minute = current_time.minute
-        
-        for hour, minute in self.post_schedules:
-            if current_hour == hour and current_minute == minute:
-                # スケジュールに一致したら投稿
-                self._post_scheduled_content()
-                break
+        # 設定した間隔を超えたら投稿
+        if elapsed >= self.next_post_interval:
+            self._post_scheduled_content()
+            # 最終投稿時刻を更新
+            self.last_post_time = current_time
+            # 次の投稿間隔を再設定
+            self.next_post_interval = self._get_random_interval()
+            logger.info(f"次の投稿は {self.next_post_interval}秒後に予定")
     
     def _post_scheduled_content(self):
         """スケジュールに従って投稿"""
