@@ -176,5 +176,5 @@ cython_debug/
 config.json
 data/logs/*
 !data/logs/.gitkeep
-data/characters/*
-!data/characters/.gitkeep
+data/character/*
+!data/character/.gitkeep
