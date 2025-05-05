@@ -21,6 +21,7 @@
 1. リポジトリをクローン
 2. `config.json`を編集してMisskeyインスタンスのURLとアクセストークンを設定
 3. 必要なパッケージをインストール: `pip install -r requirements.txt`
+4. data/character/にファイルを配置 character_templates/*にテンプレートを配置している
 4. `python main.py`で起動
 
 ## カスタマイズ
