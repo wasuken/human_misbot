@@ -6,7 +6,7 @@
     "regular_posts",
     "reactions",
     "reply_mentions",
-    "trend_watcher"
+    "adaptive_content"
   ],
   "plugins_config": {
     "regular_posts": {
@@ -21,8 +21,11 @@
     "reply_mentions": {
       "reply_probability": 0.9
     },
-    "trend_watcher": {
-      "trend_check_interval": 3600
+    "adaptive_content": {
+      "learning_data_dir": "data/learning",
+      "character_type": "tech",
+      "adaptive_post_probability": 0.3,
+      "adaptive_post_interval": 21600
     }
   }
 }

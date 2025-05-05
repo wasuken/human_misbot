@@ -1,0 +1,48 @@
+{
+  "character_type": "tech",
+  "collect_news": true,
+  "collect_rss": true,
+  "news_api": {
+    "enabled": true,
+    "api_key": "YOUR_API_KEY"
+  },
+  "rss_feeds": {
+    "enabled": true,
+    "tech": [
+      "https://www.publickey1.jp/atom.xml",
+      "https://techcrunch.com/feed/",
+      "https://gigazine.net/index.php?/news/rss_2.0/",
+      "https://github.blog/feed/"
+    ],
+    "creative": [
+      "https://design-milk.com/feed/",
+      "https://www.dezeen.com/feed/",
+      "https://www.creativebloq.com/feed"
+    ],
+    "otaku": [
+      "https://animeanime.jp/rss/index.rdf",
+      "https://akiba-pc.watch.impress.co.jp/data/rss/1.0/ah/feed.rdf",
+      "https://www.4gamer.net/rss/index.xml"
+    ]
+  },
+  "news_keywords": {
+    "tech": [
+      "AI", "人工知能", "機械学習", "プログラミング", "クラウド", "サーバーレス",
+      "AWS", "Azure", "Google Cloud", "TypeScript", "React", "Python"
+    ],
+    "creative": [
+      "デザイン", "UI/UX", "グラフィック", "クリエイティブ", "Figma", "Adobe",
+      "アート", "デザイナー", "イラスト", "映像制作", "写真"
+    ],
+    "otaku": [
+      "アニメ", "声優", "フィギュア", "コミケ", "漫画", "ライトノベル",
+      "ゲーム", "サーバー", "クラウド", "インフラ", "AWS"
+    ]
+  },
+  
+  "max_category_items": 20,
+  "max_hashtags": 30,
+  
+  "data_collection_interval": 3600,
+  "save_intermediate_results": true
+}

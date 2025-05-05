@@ -178,3 +178,4 @@ data/logs/*
 !data/logs/.gitkeep
 data/character/*
 !data/character/.gitkeep
+data/learning/**/*.json
